@@ -27,76 +27,30 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something is wrong.');
 });
 
-// // sample data
-// (async () => {
-//     try {
-//         await Game.bulkCreate([
-//             { title: 'PES', description: 'Description of PES' },
-//             { title: 'FIFA', description: 'Description of FIFA' }
-//         ]);
-
-//         await Player.bulkCreate([
-//             { firstName: 'Mike', lastName: 'Makic' },
-//             { firstName: 'Stefan', lastName: 'Vrbica' }
-//         ]);
-
-//         console.log('Sample data inserted successfully');
-//     } catch (err) {
-//         console.error('Error inserting sample data:', err);
-//     }
-// })();
-
-// const createGameWithPlayers = async () => {
-//     try {
-//         const game = await gameService.createGame({
-//             title: 'San Andreas',
-//             description: 'Description of the San Andreas',
-//         });
-
-//         const player1 = await playerService.createPlayer({
-//             firstName: 'Vlado',
-//             lastName: 'Vakic',
-//         });
-
-//         const player2 = await playerService.createPlayer({
-//             firstName: 'Boki',
-//             lastName: 'Bokic',
-//         });
-
-//         await game.addPlayer(player1);
-//         await game.addPlayer(player2);
-
-//         console.log('Game created with players');
-//     } catch (error) {
-//         console.error('Error creating game with players:', error);
-//     }
-// };
-
 const createGameWithPlayers = async () => {
     try {
         const game = await gameService.createGame({
-            title: 'San Andreas',
-            description: 'Description of the San Andreas',
+            title: 'GTA',
+            description: 'Description of the GTA',
         });
 
         const player1 = await playerService.createPlayer({
-            firstName: 'Vlado',
-            lastName: 'Vakic',
-            bornDate: '1990-05-15'
+            firstName: 'Jan',
+            lastName: 'Oblak',
+            bornDate: new Date('1990-05-15')
         });
 
         const player2 = await playerService.createPlayer({
-            firstName: 'Boki',
-            lastName: 'Bokic',
-            bornDate: '1992-08-22'
+            firstName: 'Toni',
+            lastName: 'Montana',
+            bornDate: new Date('1992-08-22')
         });
 
-        const playersData = [
-            { id: player1.id, firstName: player1.firstName, lastName: player1.lastName, bornDate: player1.bornDate },
-            { id: player2.id, firstName: player2.firstName, lastName: player2.lastName, bornDate: player2.bornDate }
-        ];
+        await game.addPlayer(player1);
+        await game.addPlayer(player2);
 
-        await gameService.updateGamePlayers(game.id, playersData);
+        const playerIds = [player1.id, player2.id];
+        await gameService.updateGame(game.id, { players: playerIds });
 
         console.log('Game created');
     } catch (error) {
