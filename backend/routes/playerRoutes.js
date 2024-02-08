@@ -4,6 +4,7 @@ const playerController = require('../controllers/playerController');
 
 // routes
 router.get('/', playerController.getAllPlayers);
+router.get('/search', playerController.searchPlayers);
 router.get('/pagination', playerController.getPlayersWithPagination);
 router.get('/:playerId/games', playerController.getGamesPlayedByPlayer);
 

@@ -1,8 +1,26 @@
+const { Op } = require('sequelize');
 const Player = require('../models/Player');
 
 exports.getAllPlayers = async (req, res) => {
     try {
         const players = await Player.findAll();
+        res.json(players);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+};
+
+exports.searchPlayers = async (req, res) => {
+    const { query } = req.query;
+    try {
+        const players = await Player.findAll({
+            where: {
+                firstName: {
+                    [Op.like]: `%${query}%`
+                }
+            }
+        });
         res.json(players);
     } catch (err) {
         console.error(err);
