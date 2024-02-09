@@ -22,7 +22,7 @@ const startServer = async () => {
         await sequelize.sync(); // sync models with the database
 
         app.listen(3000, () => {
-            console.log('Bravo, server is running on port 3000');
+            console.log('Server is running on port 3000');
         });
     } catch (err) {
         console.error('Error starting the server:', err);
