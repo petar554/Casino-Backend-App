@@ -1,5 +1,36 @@
 const { Op } = require('sequelize');
-const Game = require('../models/Game');
+const sequelize = require('../utils/database');
+const Game = require('../models/index');
+const { createGame } = require('../services/gameService');
+const { createPlayer } = require('../services/playerService');
+
+exports.createGameWithPlayers = async (req, res) => {
+    const { gameData, playersData } = req.body;
+    let transaction;
+    try {
+        transaction = await sequelize.transaction();
+
+         // game creation
+        const game = await createGame(gameData, { transaction });
+
+        // players creation
+        const players = await Promise.all(playersData.map(player => createPlayer(player, { transaction })));
+
+        // update the game with player IDs
+        const playerIds = players.map(player => player.id);
+        await game.update({ players: playerIds }, { transaction });
+
+        // update join table
+        await game.setPlayers(players, { transaction });
+
+        await transaction.commit();
+        res.status(201).json(game);
+    } catch (error) {
+        console.error('Error starting the server:', error);
+        if (transaction) await transaction.rollback();
+        res.status(500).send("Error creating game with players.");
+    }
+};
 
 exports.getAllGames = async (req, res) => {
     try {

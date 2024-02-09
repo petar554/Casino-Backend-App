@@ -5,9 +5,13 @@ const playerController = require('../controllers/playerController');
 const playerService = require('../services/playerService');
 
 // CRUD operations
+// Test: curl -X GET http://localhost:3000/api/players
 router.get('/', playerController.getAllPlayers);
+// Test: curl -X GET http://localhost:3000/api/players/search?query=Toni
 router.get('/search', playerController.searchPlayers);
+// Test: curl -X GET http://localhost:3000/api/players/pagination?page=1&limit=10
 router.get('/pagination', playerController.getPlayersWithPagination);
+// Test: curl -X GET http://localhost:3000/api/players/7911bd5d-7716-4aad-abc9-c2181652f931/games
 router.get('/:playerId/games', playerController.getGamesPlayedByPlayer);
 
 // Test: curl -X DELETE http://localhost:3000/api/players/playerID

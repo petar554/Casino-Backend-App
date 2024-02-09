@@ -5,9 +5,16 @@ const gameController = require('../controllers/gameController');
 const gameService = require('../services/gameService');
 
 // CRUD operations
+
+// Test: curl -X GET http://localhost:3000/api/games 
 router.get('/', gameController.getAllGames);
+// Test: curl -X GET http://localhost:3000/api/games/search?query=GTA
 router.get('/search', gameController.searchGames);
+// Test: curl -X GET http://localhost:3000/api/games/pagination?page=1&limit=10
 router.get('/pagination', gameController.getGamesWithPagination);
+
+// Test: via postman
+router.post('/create-game-with-players', gameController.createGameWithPlayers);
 
 // Test: curl -X DELETE http://localhost:3000/api/games/gameID
 router.delete('/:id', async (req, res) => {

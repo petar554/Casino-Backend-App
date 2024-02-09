@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const Player = require('../models/Player');
+const Player = require('../models/index');
 
 exports.getAllPlayers = async (req, res) => {
     try {

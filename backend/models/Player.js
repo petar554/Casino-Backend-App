@@ -1,5 +1,3 @@
-// Player.js
-
 const { DataTypes, Model } = require('sequelize');
 const sequelize = require('../utils/database');
 
