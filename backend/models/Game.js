@@ -18,8 +18,15 @@ Game.init({
         allowNull: true
     },
     players: {
-        type: DataTypes.ARRAY(DataTypes.JSONB), 
-        allowNull: true
+        type: DataTypes.TEXT,
+        allowNull: true,
+        get() {
+            const value = this.getDataValue('players');
+            return value ? JSON.parse(value) : [];
+        },
+        set(value) {
+            this.setDataValue('players', JSON.stringify(value));
+        }
     }
 }, {
     sequelize,
