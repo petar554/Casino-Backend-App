@@ -1,33 +1,35 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const sequelize = require('./utils/database');
+const express = require("express");
+const bodyParser = require("body-parser");
+const sequelize = require("./utils/database");
+const requestCounter = require("./middleware/requestCounter");
 
-const gameRoutes = require('./routes/gameRoutes');
-const playerRoutes = require('./routes/playerRoutes');
+const gameRoutes = require("./routes/gameRoutes");
+const playerRoutes = require("./routes/playerRoutes");
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(requestCounter);
 
-app.use('/api/games', gameRoutes);
-app.use('/api/players', playerRoutes);
- 
+app.use("/api/games", gameRoutes);
+app.use("/api/players", playerRoutes);
+
 app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something is wrong.');
+  console.error(err.stack);
+  res.status(500).send("Something is wrong.");
 });
 
 const startServer = async () => {
-    try {
-        await sequelize.sync(); // sync models with the database
+  try {
+    await sequelize.sync(); // sync models with the database
 
-        app.listen(3000, () => {
-            console.log('Server is running on port 3000');
-        });
-    } catch (err) {
-        console.error('Error starting the server:', err);
-        process.exit(1);
-    }
+    app.listen(3000, () => {
+      console.log("Server is running on port 3000");
+    });
+  } catch (err) {
+    console.error("Error starting the server:", err);
+    process.exit(1);
+  }
 };
 
 startServer();
