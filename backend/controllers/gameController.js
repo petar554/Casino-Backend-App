@@ -38,6 +38,8 @@ exports.createGameWithPlayers = async (req, res) => {
 exports.getAllGames = async (req, res) => {
   try {
     const games = await Game.findAll();
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=60");
     res.json(games);
   } catch (err) {
     console.error(err);
@@ -64,6 +66,8 @@ exports.searchGames = async (req, res) => {
       where: whereClause,
     });
 
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     res.json(games);
   } catch (err) {
     console.error(err);
@@ -77,6 +81,9 @@ exports.getGamesWithPagination = async (req, res) => {
   console.log(offset);
   try {
     const games = await Game.findAll({ offset, limit });
+
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     res.json(games);
   } catch (err) {
     console.error(err);

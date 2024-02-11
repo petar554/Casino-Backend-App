@@ -4,6 +4,8 @@ const { Player } = require("../models/index");
 exports.getAllPlayers = async (req, res) => {
   try {
     const players = await Player.findAll();
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     res.json(players);
   } catch (err) {
     console.error(err);
@@ -21,6 +23,8 @@ exports.searchPlayers = async (req, res) => {
         },
       },
     });
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     res.json(players);
   } catch (err) {
     console.error(err);
@@ -33,6 +37,8 @@ exports.getPlayersWithPagination = async (req, res) => {
   const offset = (page - 1) * limit;
   try {
     const players = await Player.findAll({ offset, limit });
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     res.json(players);
   } catch (err) {
     console.error(err);
@@ -57,6 +63,8 @@ exports.getGamesPlayedByPlayer = async (req, res) => {
     }
 
     const games = await player.getGames({ offset, limit });
+    // cache-control for 1 minute
+    res.set("Cache-Control", "public, max-age=600");
     console.log(games);
 
     res.json(games);
