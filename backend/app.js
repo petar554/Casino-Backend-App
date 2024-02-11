@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const sequelize = require("./utils/database");
 const requestCounter = require("./middleware/requestCounter");
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerOptions = require("./config/swaggerOptions");
 
 const gameRoutes = require("./routes/gameRoutes");
 const playerRoutes = require("./routes/playerRoutes");
@@ -13,6 +16,10 @@ app.use(requestCounter);
 
 app.use("/api/games", gameRoutes);
 app.use("/api/players", playerRoutes);
+
+// swagger
+const specs = swaggerJsdoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
