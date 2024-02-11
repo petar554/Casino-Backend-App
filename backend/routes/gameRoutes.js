@@ -18,6 +18,8 @@ const gameService = require("../services/gameService");
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Game'
+ *       500:
+ *         description: Error when retrieving a list of all games
  */
 router.get("/", gameController.getAllGames);
 
@@ -50,6 +52,8 @@ router.get("/", gameController.getAllGames);
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Game'
+ *       500:
+ *         description: Error when searching for games by title or ID
  */
 router.get("/search", gameController.searchGames);
 
@@ -96,6 +100,8 @@ router.get("/search", gameController.searchGames);
  *                  currentPage:
  *                    type: integer
  *                    description: Current page number
+ *        500:
+ *          description: Error when retrieving a paginated list of games
  */
 router.get("/pagination", gameController.getGamesWithPagination);
 
@@ -119,10 +125,31 @@ router.get("/pagination", gameController.getGamesWithPagination);
  *            application/json:
  *              schema:
  *                $ref: '#/components/schemas/Game'
+ *        500:
+ *          description: Error when creating a game with players
  */
 router.post("/create-game-with-players", gameController.createGameWithPlayers);
 
-// curl -X DELETE http://localhost:3000/api/games/gameID
+// curl -X DELETE http://localhost:3000/api/games/{gameID}
+/**
+ * @swagger
+ * /api/games/{id}:
+ *   delete:
+ *     summary: Deletes a game by ID
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The game ID
+ *     responses:
+ *       204:
+ *         description: Successfully deleted the game
+ *       500:
+ *         description: Error deleting the game
+ */
 router.delete("/:id", async (req, res) => {
   try {
     await gameService.deleteGame(req.params.id);
@@ -134,7 +161,36 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// curl -X PUT -H "Content-Type: application/json" -d '{"title":"GTA2","description":"Description of the GTA2"}' http://localhost:3000/api/games/{8ac7cd09-35d0-4959-9a3f-dfabef5677c4}
+// curl -X PUT -H "Content-Type: application/json" -d '{"title":"GTA5","description":"Description of the GTA5"}' http://localhost:3000/api/games/{gameID}
+/**
+ * @swagger
+ * /api/games/{gameId}:
+ *   put:
+ *     summary: Updates a game's information
+ *     tags: [Games]
+ *     parameters:
+ *       - in: path
+ *         name: gameId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The game ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GameUpdateRequest'
+ *     responses:
+ *       200:
+ *         description: Successfully updated the game
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Game'
+ *       500:
+ *         description: Error updating the game
+ */
 router.put("/:gameId", async (req, res) => {
   try {
     const updatedGame = await gameService.updateGame(

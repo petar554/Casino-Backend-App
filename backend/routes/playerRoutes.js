@@ -20,6 +20,8 @@ const playerService = require("../services/playerService");
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Player'
+ *        500:
+ *          description: Error getting players
  */
 router.get("/", playerController.getAllPlayers);
 
@@ -46,6 +48,8 @@ router.get("/", playerController.getAllPlayers);
 *                type: array
 *                items:
 *                  $ref: '#/components/schemas/Player'
+*         500:  
+*           description: Error when searching players
 */
 router.get("/search", playerController.searchPlayers);
 
@@ -92,6 +96,8 @@ router.get("/search", playerController.searchPlayers);
  *                  currentPage:
  *                    type: integer
  *                    description: Current page number
+ *          500:
+ *            description: Error when retrieving a paginated list of players
  */
 router.get("/pagination", playerController.getPlayersWithPagination);
 
@@ -118,10 +124,31 @@ router.get("/pagination", playerController.getPlayersWithPagination);
  *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Game'
+ *         500:
+ *           description: Error when getting games played by a specific player
  */
 router.get("/:playerId/games", playerController.getGamesPlayedByPlayer);
 
-// curl -X DELETE http://localhost:3000/api/players/playerID
+// curl -X DELETE http://localhost:3000/api/players/{playerID}
+/**
+ * @swagger
+ * /api/players/{id}:
+ *   delete:
+ *     summary: Deletes a player by ID
+ *     tags: [Players]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The player ID
+ *     responses:
+ *       204:
+ *         description: Successfully deleted the player
+ *       500:
+ *         description: Error deleting the player
+ */
 router.delete("/:id", async (req, res) => {
   try {
     await playerService.deletePlayer(req.params.id);
@@ -133,7 +160,36 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Jan","lastName":"Bricl"}' http://localhost:3000/api/players/{34ba8d53-2fd0-47e1-bb52-ab02e2193483}
+// curl -X PUT -H "Content-Type: application/json" -d '{"firstName":"Jan","lastName":"Bricl"}' http://localhost:3000/api/players/{playerID}
+/**
+ * @swagger
+ * /api/players/{playerId}:
+ *   put:
+ *     summary: Updates a player's information
+ *     tags: [Players]
+ *     parameters:
+ *       - in: path
+ *         name: playerId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The player ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PlayerUpdateRequest'
+ *     responses:
+ *       200:
+ *         description: Successfully updated the player
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Player'
+ *       500:
+ *         description: Error updating the player
+ */
 router.put("/:playerId", async (req, res) => {
   try {
     const updatedPlayer = await playerService.updatePlayer(
