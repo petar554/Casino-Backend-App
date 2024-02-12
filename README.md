@@ -81,6 +81,8 @@ The application supports the following REST API endpoints:
 - **Games**
 
   - `GET /api/games`: List all games.
+  - `GET /api/games/search`: Search for games.
+  - `GET /api/games/pagination`: Retrieve a paginated list of games.
   - `POST /api/games/create-game-with-players`: Create a new game with players.
   - `PUT /api/games/:id`: Update a game by ID.
   - `DELETE /api/games/:id`: Delete a game by ID.
@@ -88,7 +90,10 @@ The application supports the following REST API endpoints:
 - **Players**
 
   - `GET /api/players`: List all players.
-  - `POST /api/games/create-game-with-players`: Creating players (along with the game)
+  - `GET /api/players/search`: Search for players.
+  - `GET /api/players/pagination`: Retrieve a paginated list of players.
+  - `GET /api/:id/games`: Get games played by a specific player.
+  - `POST /api/players/:id`: Creating a new player
   - `PUT /api/players/:id`: Update a player by ID.
   - `DELETE /api/players/:id`: Delete a player by ID.
 
